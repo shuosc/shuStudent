@@ -1,0 +1,24 @@
+services:
+  - docker
+addons:
+  ssh_known_hosts: cloud.shu.xn--io0a7i
+
+jobs:
+  include:
+    - stage: build
+      language: minimal
+      script:
+        - docker build . -t shu-student
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker tag shu-student $DOCKER_USERNAME/shu-student:$TRAVIS_BUILD_ID
+        - docker push $DOCKER_USERNAME/shu-student
+    - stage: deploy
+      language: minimal
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_da6b23a19092_key -iv $encrypted_da6b23a19092_iv
+          -in deploy_rsa.enc -out deploy_rsa -d
+        - eval "$(ssh-agent -s)"
+        - chmod 600 ./deploy_rsa
+        - ssh-add ./deploy_rsa
+      script:
+        - ssh -i ./deploy_rsa root@cloud.shu.xn--io0a7i ./changeImage.sh student $DOCKER_USERNAME/shu-student:$TRAVIS_BUILD_ID
