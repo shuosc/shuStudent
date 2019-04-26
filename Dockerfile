@@ -2,9 +2,7 @@ FROM golang:1.12-alpine as builder
 RUN apk add git
 COPY . /go/src/shuStudent
 ENV GO111MODULE on
-WORKDIR /go/src/shuStudent/cli
-RUN go get && go build
-WORKDIR /go/src/shuStudent/web
+WORKDIR /go/src/shuStudent
 RUN go get && go build
 
 FROM alpine
