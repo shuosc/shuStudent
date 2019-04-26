@@ -11,6 +11,16 @@ import (
 func getStudentHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	id := r.URL.Query().Get("id")
+	tokenInHeader := r.Header.Get("Authorization")
+	if len(tokenInHeader) <= 7 {
+		w.WriteHeader(401)
+		return
+	}
+	idFromToken := token.StudentIdForToken(tokenInHeader[7:])
+	if id != idFromToken {
+		w.WriteHeader(403)
+		return
+	}
 	student, err := model.Get(id)
 	if err != nil {
 		w.WriteHeader(404)
