@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"shuStudent/model"
+	"shuStudent/service/fetchName"
 	"shuStudent/service/token"
 )
 
@@ -22,9 +23,13 @@ func getStudentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	student, err := model.Get(id)
-	if err != nil {
-		w.WriteHeader(404)
-		return
+	if err != nil || student.Name == "" {
+		student, err = fetchName.FetchName(student, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50SWQiOiIxNzEyMDIzOCJ9.WhuA70GYhlMG8qUgpGnaNw0cpIn-V4vmbvEy_5Q0XNA")
+		model.Put(student)
+		if err != nil {
+			w.WriteHeader(404)
+			return
+		}
 	}
 	data, _ := json.Marshal(student)
 	_, _ = w.Write(data)
