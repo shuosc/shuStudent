@@ -34,6 +34,8 @@ func FetchName(student model.Student, token string) (model.Student, error) {
 	selection := doc.Find("#leftMenu>#leftmenu_Accordion .ui-accordion-content div:nth-of-type(2)")
 	if !strings.Contains(selection.Text(), "姓名：") {
 		log.Println("Cannot find nameinfo in", selection.Text())
+		html, _ := doc.Html()
+		log.Println("Doc is:\n", html)
 	}
 	student.Name = strings.Trim(selection.Text(), " \n")[len("姓名："):]
 	return student, nil
