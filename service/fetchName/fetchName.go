@@ -3,6 +3,7 @@ package fetchName
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
@@ -36,6 +37,7 @@ func FetchName(student model.Student, token string) (model.Student, error) {
 		log.Println("Cannot find nameinfo in", selection.Text())
 		html, _ := doc.Html()
 		log.Println("Doc is:\n", html)
+		return student, fmt.Errorf("not logined")
 	}
 	student.Name = strings.Trim(selection.Text(), " \n")[len("姓名："):]
 	return student, nil

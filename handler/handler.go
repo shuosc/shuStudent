@@ -27,7 +27,11 @@ func getStudentHandler(w http.ResponseWriter, r *http.Request) {
 		student, err = fetchName.FetchName(student, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50SWQiOiIxNzEyMDIzOCJ9.WhuA70GYhlMG8qUgpGnaNw0cpIn-V4vmbvEy_5Q0XNA")
 		model.Put(student)
 		if err != nil {
-			w.WriteHeader(404)
+			if err.Error() == "not logined" {
+				w.WriteHeader(401)
+			} else {
+				w.WriteHeader(404)
+			}
 			return
 		}
 	}
