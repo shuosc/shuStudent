@@ -19,9 +19,9 @@
 
   检查服务是否可用，应该直接返回`pong`。
 
-- `GET /student?id=[学生证号]`
+- `GET /student`
 
-  获得学生信息
+  获得jwt token指示的学生的信息
   
 - `POST /student`、`PUT /student`
  
